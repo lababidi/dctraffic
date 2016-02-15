@@ -65,6 +65,7 @@ def dayofweek(day):
 crash['hour'] = crash['MILITARYTIME'] // 100
 crash['day_of_week'] = crash['DAYOFWEEK'].apply(dayofweek)
 crash['day_hour'] = crash['day_of_week'] + (crash['MILITARYTIME'] // 100)
+crash['month'] = crash['ACCIDENTDATE'].str.split('-')[1]
 
 print(crash.groupby(['DAYOFWEEK', 'hour']).size())
 print(crash.groupby('day_hour').size())
@@ -72,11 +73,12 @@ print(crash.groupby('day_hour').size())
 plt.interactive(False)
 
 crash.groupby('day_hour').size().plot()
-plt.show()
+# plt.show()
 
 crash['geohash'] = crash[['LATITUDE', 'LONGITUDE']].apply(lambda x: enc_hash(x), axis=1)
 crash_list = crash['geohash'].value_counts().sort_values(ascending=False).head(50)
-print(crash_list.index)
+print(crash_list.index.tolist())
+print(crash.index.tolist())
 crash_list.plot(kind='bar')
 plt.show()
 
